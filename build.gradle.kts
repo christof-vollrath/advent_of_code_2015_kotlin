@@ -22,6 +22,13 @@ tasks.test {
 
 kotlin {
     jvmToolchain(11)
+    sourceSets {
+        test {
+            languageSettings {
+                optIn("io.kotest.common.ExperimentalKotest")
+            }
+        }
+    }
 }
 
 application {

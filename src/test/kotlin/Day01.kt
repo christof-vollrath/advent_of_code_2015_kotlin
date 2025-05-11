@@ -2,7 +2,6 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 
-@io.kotest.common.ExperimentalKotest
 class Day01Part1: BehaviorSpec() { init {
 
     Given("examples") {
@@ -34,7 +33,6 @@ class Day01Part1: BehaviorSpec() { init {
     }
 } }
 
-@io.kotest.common.ExperimentalKotest
 class Day01Part2: BehaviorSpec() { init {
 
     Given("examples") {

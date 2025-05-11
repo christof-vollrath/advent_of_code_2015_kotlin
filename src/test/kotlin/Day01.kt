@@ -1,6 +1,6 @@
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.datatest.withData
-import io.kotest.matchers.equals.shouldBeEqual
+import io.kotest.matchers.shouldBe
 
 @io.kotest.common.ExperimentalKotest
 class Day01Part1: BehaviorSpec() { init {
@@ -19,7 +19,7 @@ class Day01Part1: BehaviorSpec() { init {
                 FloorDirectionsAndExpectedResult(")))", -3),
                 FloorDirectionsAndExpectedResult(")())())", -3),
             ) { (directions, expectedFloor) ->
-                followDirections(directions) shouldBeEqual expectedFloor
+                followDirections(directions) shouldBe expectedFloor
             }
         }
     }
@@ -28,7 +28,7 @@ class Day01Part1: BehaviorSpec() { init {
         When("following directions") {
             val floor = followDirections(inputString)
             Then("it should be on the right floor") {
-                floor shouldBeEqual 138
+                floor shouldBe 138
             }
         }
     }

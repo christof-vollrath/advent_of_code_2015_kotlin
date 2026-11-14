@@ -20,7 +20,7 @@ class Day02Part1 : BehaviorSpec({
                 BoxAndExpectedPaper(Box(2, 3, 4), 58),
                 BoxAndExpectedPaper(Box(1, 1, 10), 43)
             ) { (box, expectedPaper) ->
-                requiredWrappingPaper(box) shouldBe expectedPaper
+                box.requiredPaper() shouldBe expectedPaper
             }
         }
 
@@ -47,21 +47,24 @@ class Day02Part1 : BehaviorSpec({
     }
 })
 
-data class Box(val l: Int, val w: Int, val h: Int)
+data class Box(val l: Int, val w: Int, val h: Int) {
+    /** Calculates the paper needed for this specific box. */
+    fun requiredPaper(): Int {
+        val sides = listOf(l * w, w * h, h * l).sorted()
+        val surfaceArea = sides.sum() * 2
+        val smallestSide = sides.first()
+        return surfaceArea + smallestSide
+    }
+}
 
-fun parseBox(line: String): Box =
-    line.split('x')
-        .map { it.toInt() }
-        .let { (l, w, h) -> Box(l, w, h) }
-
-fun requiredWrappingPaper(box: Box): Int =
-    listOf(box.l, box.w, box.h)
-        .sorted()
-        .let { (a, b, c) -> 2 * a * b + 2 * b * c + 2 * a * c + a * b }
+/** Parses a string like "2x3x4" into a Box object. */
+fun parseBox(line: String): Box {
+    val (l, w, h) = line.split('x').map { it.toInt() }
+    return Box(l, w, h)
+}
 
 fun totalWrappingPaper(input: String): Int =
     input.lineSequence()
         .filter { it.isNotBlank() }
         .map(::parseBox)
-        .map(::requiredWrappingPaper)
-        .sum()
+        .sumOf { it.requiredPaper() }

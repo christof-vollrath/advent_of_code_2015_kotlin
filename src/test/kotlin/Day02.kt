@@ -48,12 +48,20 @@ class Day02Part1 : BehaviorSpec({
 })
 
 data class Box(val l: Int, val w: Int, val h: Int) {
-    /** Calculates the paper needed for this specific box. */
+    /** Calculates the paper needed for this specific box (Part 1). */
     fun requiredPaper(): Int {
         val sides = listOf(l * w, w * h, h * l).sorted()
         val surfaceArea = sides.sum() * 2
         val smallestSide = sides.first()
         return surfaceArea + smallestSide
+    }
+
+    /** Calculates the ribbon needed for this specific box (Part 2). */
+    fun requiredRibbon(): Int {
+        val dimensions = listOf(l, w, h).sorted()
+        val smallestPerimeter = 2 * (dimensions[0] + dimensions[1])
+        val volume = l * w * h
+        return smallestPerimeter + volume
     }
 }
 
@@ -68,3 +76,45 @@ fun totalWrappingPaper(input: String): Int =
         .filter { it.isNotBlank() }
         .map(::parseBox)
         .sumOf { it.requiredPaper() }
+
+fun totalRequiredRibbon(input: String): Int =
+    input.lineSequence()
+        .filter { it.isNotBlank() }
+        .map(::parseBox)
+        .sumOf { it.requiredRibbon() }
+
+class Day02Part2 : BehaviorSpec({
+
+    Given("examples for required ribbon") {
+        data class BoxAndExpectedRibbon(val box: Box, val expectedRibbon: Int)
+        context("input data") {
+            withData(
+                BoxAndExpectedRibbon(Box(2, 3, 4), 34),
+                BoxAndExpectedRibbon(Box(1, 1, 10), 14)
+            ) { (box, expectedRibbon) ->
+                box.requiredRibbon() shouldBe expectedRibbon
+            }
+        }
+
+        When("calculating total for multiple presents") {
+            val sampleInput = """
+                2x3x4
+                1x1x10
+            """.trimIndent()
+            val total = totalRequiredRibbon(sampleInput)
+            Then("it should sum up ribbon for all presents") {
+                total shouldBe 34 + 14
+            }
+        }
+    }
+
+    Given("exercise input") {
+        val inputString = readResource("inputDay02.txt")!!
+        When("calculating total ribbon") {
+            val total = totalRequiredRibbon(inputString)
+            Then("it should calculate the total feet of ribbon needed") {
+                total shouldBe 3783758
+            }
+        }
+    }
+})
